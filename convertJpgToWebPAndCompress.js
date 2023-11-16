@@ -10,9 +10,10 @@ function verifyAndCreatePaths(pasta) {
     console.log(`Pasta criada: ${pasta}`);
   }
 }
-function convertJpgToWebp() {
+function compressAndConvertJpgToWebp() {
   verifyAndCreatePaths(inputFolder);
   verifyAndCreatePaths(outputFolder);
+
   fs.readdir(inputFolder, (err, files) => {
     if (err) {
       console.error("Erro ao ler o diretório de entrada:", err);
@@ -25,13 +26,13 @@ function convertJpgToWebp() {
         const outputFile = path.join(outputFolder, file.replace(".jpg", ".webp"));
 
         sharp(inputFile)
-          .toFormat("webp")
+          .toFormat("webp", { quality: 80 }) // Ajuste a qualidade aqui.
           .toFile(outputFile)
           .then(() => {
-            console.log(`Convertido: ${inputFile} -> ${outputFile}`);
+            console.log(`Convertido e comprimido: ${inputFile} -> ${outputFile}`);
           })
           .catch((err) => {
-            console.error(`Erro ao converter ${inputFile}:`, err);
+            console.error(`Erro ao converter e comprimir ${inputFile}:`, err);
           });
       }
     });
@@ -42,4 +43,4 @@ if (!fs.existsSync(outputFolder)) {
   fs.mkdirSync(outputFolder);
 }
 
-convertJpgToWebp();
+compressAndConvertJpgToWebp();
